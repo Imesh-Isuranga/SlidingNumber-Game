@@ -1,125 +1,200 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  List<int> myItemTextList = _MyGridViewState().itemText;
+
+  runApp(MaterialApp(
+    theme: ThemeData.from(
+    colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blueGrey,backgroundColor: const Color.fromARGB(255, 170, 168, 168)),
+  ),
+    home: Scaffold(
+        appBar: AppBar(
+          title: const Text("Sliding Number Game"),
+        ),
+        body: const MyGridView()),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyGridView extends StatefulWidget {
 
-  // This widget is the root of your application.
+  const MyGridView({super.key});
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+  _MyGridViewState createState() => _MyGridViewState();
+}
+
+class _MyGridViewState extends State<MyGridView> {
+  static Color color = const Color.fromARGB(255, 3, 27, 163);
+  static Color colorWhite = const Color.fromARGB(255, 255, 255, 255);
+
+  List<Color> itemColors = List.generate(9, (index) => color);
+  List<int> itemText = [1, 2, 3, 4, 5, 6, 7, 9, 8];
+  List<int> itemTextTemp = List.generate(9, (index) => index + 1);
+
+  final random = Random();
+
+  void shuffleAll() {
+    setState(() {
+      itemText.shuffle();
+      for (int i = 0; i <= 8; i++) {
+        if (itemText[i] == 9) {
+          itemColors[i] = colorWhite;
+        }else{
+          itemColors[i] = color;
+        }
+      }
+   }
     );
   }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  void initState() {
+    shuffleAll();
+    super.initState();
+  }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  void _handleItemTap(int index) {
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+        ;
+      },
+    );
 
-  void _incrementCounter() {
+    AlertDialog alert = AlertDialog(
+      title: const Text("Congratulations"),
+      content: const Text("You won!"),
+      actions: [
+        okButton,
+      ],
+    );
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      // Change the color of the tapped container using the index.
+      for (int i = 0; i <= 8; i++) {
+        if (itemColors[i] == colorWhite) {
+          if (i == 0 && (index == 1 || index == 3)) {
+            itemColors[index] = colorWhite;
+            itemColors[0] = color;
+            itemText[0] = itemText[index];
+          itemText[index] = 9;
+          }
+
+          if (i == 1 && (index == 0 || index == 2 || index == 4)) {
+            itemColors[index] = colorWhite;
+            itemColors[1] = color;
+            itemText[1] = itemText[index];
+          itemText[index] = 9;
+          }
+
+          if (i == 2 && (index == 1 || index == 5)) {
+            itemColors[index] = colorWhite;
+            itemColors[2] =color;
+            itemText[2] = itemText[index];
+          itemText[index] = 9;
+          }
+
+          if (i == 3 && (index == 0 || index == 4 || index==6)) {
+            itemColors[index] =colorWhite;
+            itemColors[3] = color;
+            itemText[3] = itemText[index];
+          itemText[index] = 9;
+          }
+
+          if (i == 4 &&
+              (index == 1 || index == 3 || index == 5 || index == 7)) {
+            itemColors[index] = colorWhite;
+            itemColors[4] = color;
+            itemText[4] = itemText[index];
+          itemText[index] = 9;
+          }
+
+          if (i == 5 && (index == 2 || index == 4 || index == 8)) {
+            itemColors[index] =colorWhite;
+            itemColors[5] =color;
+            itemText[5] = itemText[index];
+          itemText[index] = 9;
+          }
+
+          if (i == 6 && (index == 3 || index == 7)) {
+            itemColors[index] = colorWhite;
+            itemColors[6] =color;
+            itemText[6] = itemText[index];
+          itemText[index] = 9;
+          }
+          if (i == 7 && (index == 4 || index == 6 || index == 8)) {
+            itemColors[index] = colorWhite;
+            itemColors[7] = color;
+            itemText[7] = itemText[index];
+          itemText[index] = 9;
+          }
+
+          if (i == 8 && (index == 5 || index == 7)) {
+            itemColors[index] = colorWhite;
+            itemColors[8] = color;
+            itemText[8] = itemText[index];
+          itemText[index] = 9;
+          }
+
+        }
+      }
+
+      int temp = 0;
+      for (int i = 0; i < itemText.length; i++) {
+        if (itemText[i] == itemTextTemp[i]) {
+          temp++;
+        }
+      }
+
+      if (temp == itemText.length) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return alert;
+          },
+        );
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+    return Column(
+      children: [
+        const SizedBox(height: 50,),
+        Expanded(
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+            itemCount: 9,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () => _handleItemTap(index),
+                child: Container(
+                  color: itemColors[index],
+                  margin: const EdgeInsets.all(10.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    itemText[index].toString(),
+                    style: const TextStyle(color: Colors.white, fontSize: 50),
+                  ),
+                ),
+              );
+            },
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+        TextButton(
+            onPressed: () {
+              shuffleAll();
+            },
+            child: const Text(
+              "Shuffle",
+              style: TextStyle(fontSize: 20,color: Color.fromARGB(255, 2, 2, 108)),
+            )),
+      ],
     );
   }
 }
